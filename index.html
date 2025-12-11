@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>EcoPower+ – Today’s Recommendation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: #000;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            position: relative;
+            width: 477px;
+            height: 990px;
+            background-image: url("images/recommendation-bg.png");
+            background-size: cover;
+            background-position: center;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        .content {
+            position: absolute;
+            top: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 88%;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 18px;
+            padding: 16px 18px;
+            margin-bottom: 14px;
+            backdrop-filter: blur(8px);
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-subtitle {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .solar-mode-badge {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+        }
+
+        .solar-high { background: rgba(46, 204, 113, 0.18); color: #2ecc71; }
+        .solar-medium { background: rgba(241, 196, 15, 0.18); color: #f1c40f; }
+        .solar-low { background: rgba(231, 76, 60, 0.18); color: #e74c3c; }
+
+        .refresh-btn {
+            margin-top: 16px;
+            width: 100%;
+            padding: 12px 0;
+            border-radius: 16px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            background: #2ecc71;
+            color: #000;
+            cursor: pointer;
+        }
+
+        .status-text {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-top: 6px;
+            text-align: center;
+        }
+
+        /* -------------------------------------- */
+        /* 🔆 ANIMATED SUN ICON                    */
+        /* -------------------------------------- */
+        .sun {
+            width: 32px;
+            height: 32px;
+            position: relative;
+        }
+
+        .sun-core {
+            width: 32px;
+            height: 32px;
+            background: #FFD93D;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+        }
+
+        .sun-rays {
+            width: 32px;
+            height: 32px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-image: radial-gradient(circle, #FFD93D 30%, transparent 32%);
+            border-radius: 50%;
+            animation: spinRays 6s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes spinRays {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* -------------------------------------- */
+        /* 🌧️ ANIMATED RAIN ICON                  */
+        /* -------------------------------------- */
+        .rain-icon {
+            position: relative;
+            width: 40px;
+            height: 40px;
+        }
+
+        .rain-cloud {
+            font-size: 32px;
+            position: absolute;
+            top: -10px;
+            left: 0;
+        }
+
+        .raindrop {
+            position: absolute;
+            top: 20px;
+            left: 12px;
+            width: 6px;
+            height: 10px;
+            background: #3DB2FF;
+            border-radius: 50% 50% 60% 60%;
+            animation: rainDrop 0.7s infinite linear;
+        }
+
+        .raindrop:nth-child(2) { left: 20px; animation-delay: 0.2s; }
+        .raindrop:nth-child(3) { left: 28px; animation-delay: 0.4s; }
+
+        @keyframes rainDrop {
+            0% { transform: translateY(0); opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(14px); opacity: 0; }
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <div class="content">
+
+            <!-- Weather card -->
+            <div id="weather-card" class="card">
+                <div class="card-title">
+                    <span id="weather-icon"></span>
+                    <span id="weather-title-text">Weather loading...</span>
+                </div>
+
+                <div class="card-subtitle" id="weather-description"></div>
+                <div class="card-subtitle" id="temperature"></div>
+            </div>
+
+            <!-- Solar recommendation card -->
+            <div id="solar-card" class="card">
+                <div class="card-title">Solar recommendation</div>
+                <div class="card-subtitle">Waiting for weather data...</div>
+            </div>
+
+            <button class="refresh-btn" onclick="loadWeatherAndSolar()">Refresh recommendation</button>
+
+            <div id="status" class="status-text"></div>
+        </div>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
