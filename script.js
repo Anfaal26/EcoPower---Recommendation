@@ -1,5 +1,5 @@
 const API_KEY = "57ec129981c8b6b53277873917a03a52";
-const LOCATION = "Kuala Lumpur";
+const LOCATION = "New York";
 
 let currentRecommendationText = "";
 
@@ -27,7 +27,7 @@ async function fetchWeather() {
     return res.json();
 }
 
-/* ---------- ICON LOGIC ---------- */
+/* ICON LOGIC  */
 function getWeatherIcon(cond) {
     cond = cond.toLowerCase();
 
@@ -63,7 +63,7 @@ function animatedRainIcon() {
     `;
 }
 
-/* ---------- WEATHER CARD ---------- */
+/*  WEATHER CARD  */
 function updateWeatherCard(data) {
     const condition = data.weather[0].description;
     const temp = data.main.temp;
@@ -75,7 +75,7 @@ function updateWeatherCard(data) {
     document.getElementById("temperature").textContent = `Temperature: ${temp.toFixed(1)}°C`;
 }
 
-/* ---------- SOLAR RECOMMENDATION ---------- */
+/*  SOLAR RECOMMENDATION  */
 function updateSolarCard(data) {
     const cloud = data.clouds.all;
     const card = document.getElementById("solar-card");
@@ -108,7 +108,7 @@ function updateSolarCard(data) {
     `;
 }
 
-/* ---------- TEXT TO SPEECH ---------- */
+/*  TEXT TO SPEECH  */
 function speakRecommendation() {
     if (!currentRecommendationText) return;
 
