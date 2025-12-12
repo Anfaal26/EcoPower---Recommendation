@@ -1,35 +1,33 @@
-
-/* -------- CONFIG -------- */
-const API_KEY = "57ec129981c8b6b53277873917a03a52"; 
+const API_KEY = "57ec129981c8b6b53277873917a03a52";
 const LOCATION = "Kuala Lumpur";
 
-document.addEventListener("DOMContentLoaded", () => loadWeatherAndSolar());
+let currentRecommendationText = "";
 
-/* -------- MAIN FUNCTION -------- */
+document.addEventListener("DOMContentLoaded", loadWeatherAndSolar);
+
 async function loadWeatherAndSolar() {
-    const statusEl = document.getElementById("status");
-    statusEl.textContent = "Loading weather...";
+    const status = document.getElementById("status");
+    status.textContent = "Loading weather...";
 
     try {
-        const weather = await fetchWeather();
-        updateWeatherCard(weather);
-        updateSolarCard(weather);
-        statusEl.textContent = "Updated.";
-    } catch (err) {
-        console.error(err);
-        statusEl.textContent = "Failed to load weather data.";
+        const data = await fetchWeather();
+        updateWeatherCard(data);
+        updateSolarCard(data);
+        status.textContent = "Updated.";
+    } catch (e) {
+        console.error(e);
+        status.textContent = "Failed to load weather data.";
     }
 }
 
-/* -------- FETCH WEATHER (OpenWeather) -------- */
 async function fetchWeather() {
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${LOCATION}&appid=${API_KEY}&units=metric`;
     const res = await fetch(url);
-    if (!res.ok) throw new Error("Weather API failed: " + res.status);
-    return await res.json();
+    if (!res.ok) throw new Error("API error");
+    return res.json();
 }
 
-/* -------- GET ICON BASED ON WEATHER -------- */
+/* ---------- ICON LOGIC ---------- */
 function getWeatherIcon(cond) {
     cond = cond.toLowerCase();
 
@@ -40,18 +38,16 @@ function getWeatherIcon(cond) {
         return animatedSunIcon();
 
     if (cond.includes("cloud"))
-        return `<span style="font-size:32px;">☁️</span>`;
+        return `<span style="font-size:26px;">☁️</span>`;
 
-    return `<span style="font-size:32px;">🌍</span>`;
+    return `<span style="font-size:26px;">🌍</span>`;
 }
-
-/* -------- ICON TEMPLATES -------- */
 
 function animatedSunIcon() {
     return `
         <div class="sun">
-            <div class="sun-core"></div>
             <div class="sun-rays"></div>
+            <div class="sun-core"></div>
         </div>
     `;
 }
@@ -67,7 +63,7 @@ function animatedRainIcon() {
     `;
 }
 
-/* -------- UPDATE WEATHER CARD -------- */
+/* ---------- WEATHER CARD ---------- */
 function updateWeatherCard(data) {
     const condition = data.weather[0].description;
     const temp = data.main.temp;
@@ -79,33 +75,49 @@ function updateWeatherCard(data) {
     document.getElementById("temperature").textContent = `Temperature: ${temp.toFixed(1)}°C`;
 }
 
-/* -------- UPDATE SOLAR CARD -------- */
+/* ---------- SOLAR RECOMMENDATION ---------- */
 function updateSolarCard(data) {
     const cloud = data.clouds.all;
     const card = document.getElementById("solar-card");
 
-    let title, body, badgeClass, badgeText;
+    let title, body, badge, cls;
 
     if (cloud < 30) {
-        title = "High solar output expected 🌞";
+        title = "High solar output expected";
         body = "Great sunlight today. Switch to full solar mode.";
-        badgeClass = "solar-high";
-        badgeText = "Solar Boost Day";
+        badge = "Solar Boost Day";
+        cls = "solar-high";
     } else if (cloud < 60) {
-        title = "Moderate solar output 🌤️";
-        body = "Use solar normally but avoid heavy loads at night.";
-        badgeClass = "solar-medium";
-        badgeText = "Balanced Mode";
+        title = "Moderate solar output expected";
+        body = "Use solar normally and avoid heavy loads at night.";
+        badge = "Balanced Mode";
+        cls = "solar-medium";
     } else {
-        title = "Low solar output 🌧️";
-        body = "Cloudy. Reduce AC usage and postpone heavy appliances.";
-        badgeClass = "solar-low";
-        badgeText = "Conservation Day";
+        title = "Low solar output expected";
+        body = "Reduce AC usage and postpone heavy appliances.";
+        badge = "Conservation Day";
+        cls = "solar-low";
     }
+
+    currentRecommendationText = `${title}. ${body}`;
 
     card.innerHTML = `
         <div class="card-title">${title}</div>
         <div class="card-subtitle">${body}</div>
-        <span class="solar-mode-badge ${badgeClass}">${badgeText}</span>
+        <span class="solar-mode-badge ${cls}">${badge}</span>
     `;
+}
+
+/* ---------- TEXT TO SPEECH ---------- */
+function speakRecommendation() {
+    if (!currentRecommendationText) return;
+
+    window.speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(currentRecommendationText);
+    speech.lang = "en-US";
+    speech.rate = 1;
+    speech.pitch = 1;
+
+    window.speechSynthesis.speak(speech);
 }
