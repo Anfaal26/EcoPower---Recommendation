@@ -13,7 +13,6 @@
         }
 
         body {
-            margin: 0;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background: #000;
             display: flex;
@@ -33,12 +32,19 @@
 
         .content {
             position: absolute;
-            top: 150px;
+            top: 120px;
             left: 50%;
             transform: translateX(-50%);
-            width: 88%;
+            width: 90%;
         }
 
+      
+        /* ---------------- RECOMMENDATION OFFSET ---------------- */
+        .recommendation-section {
+            margin-top: 50vh; /* PUSH DOWN TO ~60% SCREEN HEIGHT */
+        }
+
+        /* ---------------- CARDS ---------------- */
         .card {
             background: rgba(255, 255, 255, 0.07);
             border-radius: 18px;
@@ -50,10 +56,10 @@
         .card-title {
             font-size: 16px;
             font-weight: 600;
-            margin-bottom: 6px;
             display: flex;
             align-items: center;
             gap: 8px;
+            margin-bottom: 6px;
         }
 
         .card-subtitle {
@@ -77,8 +83,8 @@
         .refresh-btn {
             margin-top: 16px;
             width: 100%;
-            padding: 12px 0;
-            border-radius: 16px;
+            padding: 14px 0;
+            border-radius: 18px;
             border: none;
             font-size: 15px;
             font-weight: 600;
@@ -94,9 +100,7 @@
             text-align: center;
         }
 
-        /* -------------------------------------- */
-        /* 🔆 ANIMATED SUN ICON                    */
-        /* -------------------------------------- */
+        /* ---------- Animated Sun ---------- */
         .sun {
             width: 32px;
             height: 32px;
@@ -109,21 +113,15 @@
             background: #FFD93D;
             border-radius: 50%;
             position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 2;
         }
 
         .sun-rays {
             width: 32px;
             height: 32px;
             position: absolute;
-            top: 0;
-            left: 0;
             background-image: radial-gradient(circle, #FFD93D 30%, transparent 32%);
             border-radius: 50%;
             animation: spinRays 6s linear infinite;
-            z-index: 1;
         }
 
         @keyframes spinRays {
@@ -131,9 +129,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* -------------------------------------- */
-        /* 🌧️ ANIMATED RAIN ICON                  */
-        /* -------------------------------------- */
+        /* ---------- Animated Rain ---------- */
         .rain-icon {
             position: relative;
             width: 40px;
@@ -144,59 +140,62 @@
             font-size: 32px;
             position: absolute;
             top: -10px;
-            left: 0;
         }
 
         .raindrop {
             position: absolute;
             top: 20px;
-            left: 12px;
             width: 6px;
             height: 10px;
             background: #3DB2FF;
-            border-radius: 50% 50% 60% 60%;
+            border-radius: 50%;
             animation: rainDrop 0.7s infinite linear;
         }
 
-        .raindrop:nth-child(2) { left: 20px; animation-delay: 0.2s; }
+        .raindrop:nth-child(2) { left: 18px; animation-delay: 0.2s; }
         .raindrop:nth-child(3) { left: 28px; animation-delay: 0.4s; }
 
         @keyframes rainDrop {
-            0% { transform: translateY(0); opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(14px); opacity: 0; }
+            to { transform: translateY(14px); opacity: 0; }
         }
-
     </style>
 </head>
 
 <body>
-    <div class="app">
-        <div class="content">
+<div class="app">
+    <div class="content">
 
-            <!-- Weather card -->
+       
+
+        <!-- RECOMMENDATION SECTION (PUSHED DOWN) -->
+        <div class="recommendation-section">
+
+            <!-- WEATHER CARD -->
             <div id="weather-card" class="card">
                 <div class="card-title">
                     <span id="weather-icon"></span>
                     <span id="weather-title-text">Weather loading...</span>
                 </div>
-
                 <div class="card-subtitle" id="weather-description"></div>
                 <div class="card-subtitle" id="temperature"></div>
             </div>
 
-            <!-- Solar recommendation card -->
+            <!-- RECOMMENDATION CARD -->
             <div id="solar-card" class="card">
                 <div class="card-title">Solar recommendation</div>
                 <div class="card-subtitle">Waiting for weather data...</div>
             </div>
 
-            <button class="refresh-btn" onclick="loadWeatherAndSolar()">Refresh recommendation</button>
+            <button class="refresh-btn" onclick="loadWeatherAndSolar()">
+                Refresh recommendation
+            </button>
 
             <div id="status" class="status-text"></div>
+
         </div>
     </div>
+</div>
 
-    <script src="script.js" defer></script>
+<script src="script.js" defer></script>
 </body>
 </html>
